@@ -1,4 +1,5 @@
-<form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+<div class="location-container">
+    <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
     <div>
       <label for="country">Country</label>
       <select id="country" formControlName="country" (change)="onCountryChange($any($event.target).value)">
@@ -15,3 +16,4 @@
     
     <button type="submit" [disabled]="locationForm.invalid">Submit</button>
   </form>
+</div>
