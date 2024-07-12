@@ -1,0 +1,17 @@
+<form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="country">Country</label>
+      <select id="country" formControlName="country" (change)="onCountryChange($any($event.target).value)">
+        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="province">Province</label>
+      <select id="province" formControlName="province">
+        <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
+      </select>
+    </div>
+    
+    <button type="submit" [disabled]="locationForm.invalid">Submit</button>
+  </form>

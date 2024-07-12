@@ -1,0 +1,29 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email">
+      <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+        Invalid email
+      </div>
+    </div>
+    
+    <div>
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password">
+    </div>
+    
+    <div>
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" formControlName="confirmPassword" type="password">
+      <div *ngIf="registrationForm.hasError('passwordMismatch') && registrationForm.get('confirmPassword')?.touched">
+        Passwords must match
+      </div>
+    </div>
+    
+    <div>
+      <input type="checkbox" formControlName="agree">
+      <label for="agree">I agree</label>
+    </div>
+    
+    <button type="submit" [disabled]="registrationForm.invalid">Next</button>
+  </form>
