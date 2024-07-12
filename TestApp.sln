@@ -5,7 +5,15 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserContextDb", "UserContextDb\UserContextDb.csproj", "{2A17238E-719F-4084-BA9A-ABB49CB68B65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationService", "RegistrationService\RegistrationService.csproj", "{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegistrationService", "RegistrationService\RegistrationService.csproj", "{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Registration", "Registration", "{7F244BE0-2F6A-4819-8C82-384F9EB5CBAF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Location", "Location", "{4DBDE7A5-9A2C-4B72-92D2-86DADD562C63}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationService", "LocationService\LocationService.csproj", "{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationContextDb", "LocationContextDb\LocationContextDb.csproj", "{F15D3375-CB85-4C62-BB56-10A29FFA86D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +29,23 @@ Global
 		{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A17238E-719F-4084-BA9A-ABB49CB68B65} = {7F244BE0-2F6A-4819-8C82-384F9EB5CBAF}
+		{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E} = {7F244BE0-2F6A-4819-8C82-384F9EB5CBAF}
+		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2} = {4DBDE7A5-9A2C-4B72-92D2-86DADD562C63}
+		{F15D3375-CB85-4C62-BB56-10A29FFA86D2} = {4DBDE7A5-9A2C-4B72-92D2-86DADD562C63}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B51CE905-9770-4360-99E1-535E18F91069}

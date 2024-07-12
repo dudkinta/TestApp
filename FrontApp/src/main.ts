@@ -1,5 +1,4 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { provideHttpClient } from '@angular/common/http';
 import { AppModule } from './app/app.module';
 
 platformBrowserDynamic().bootstrapModule(AppModule)

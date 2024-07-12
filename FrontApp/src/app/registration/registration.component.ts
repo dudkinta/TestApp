@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,10 +13,23 @@ export class RegistrationComponent {
   constructor(private fb: FormBuilder, private router: Router) {
     this.registrationForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, this.passwordValidator]],
       confirmPassword: ['', [Validators.required]],
       agree: [false, [Validators.requiredTrue]]
     }, { validator: this.checkPasswords });
+  }
+
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+
+    const hasNumber = /\d/.test(value);
+    const hasLetter = /[a-zA-Z]/.test(value);
+    const passwordValid = hasNumber && hasLetter;
+
+    return !passwordValid ? { passwordStrength: true } : null;
   }
 
   checkPasswords(group: FormGroup) {
@@ -27,7 +40,6 @@ export class RegistrationComponent {
 
   onSubmit() {
     if (this.registrationForm.valid) {
-      console.log("navigete to Location");
       this.router.navigate(['/location']);
     }
   }

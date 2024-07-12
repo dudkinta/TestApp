@@ -1,31 +1,34 @@
 <div class="registration-container">
-    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-      <div>
-        <label for="email">Email</label>
-        <input id="email" formControlName="email" type="email">
-        <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
-          Invalid email
-        </div>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email">
+      <div class="warning" [ngClass]="{ 'hidden': !(registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched)}">
+        Invalid email
       </div>
-      
-      <div>
-        <label for="password">Password</label>
-        <input id="password" formControlName="password" type="password">
+    </div>
+    
+    <div>
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password">
+      <div class="warning" [ngClass]="{ 'hidden': !(registrationForm.get('password')?.hasError('passwordStrength') && registrationForm.get('password')?.touched)}">
+        Password must contain at least one letter and one number
       </div>
-      
-      <div>
-        <label for="confirmPassword">Confirm Password</label>
-        <input id="confirmPassword" formControlName="confirmPassword" type="password">
-        <div *ngIf="registrationForm.hasError('passwordMismatch') && registrationForm.get('confirmPassword')?.touched">
-          Passwords must match
-        </div>
+    </div>
+    
+    <div>
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" formControlName="confirmPassword" type="password">
+      <div class="warning" [ngClass]="{ 'hidden': !registrationForm.hasError('passwordMismatch') || !registrationForm.get('confirmPassword')?.touched }">
+        Passwords must match
       </div>
-      
-      <div>
-        <input type="checkbox" formControlName="agree">
-        <label for="agree">I agree</label>
-      </div>
-      
-      <button type="submit" [disabled]="registrationForm.invalid">Next</button>
-    </form>
-  </div>
+    </div>
+    
+    <div>
+      <input type="checkbox" formControlName="agree">
+      <label for="agree">I agree</label>
+    </div>
+    
+    <button type="submit" [disabled]="registrationForm.invalid">Next</button>
+  </form>
+</div>
