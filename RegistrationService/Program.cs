@@ -38,10 +38,8 @@ app.UseStaticFiles(new StaticFileOptions
         Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
     RequestPath = ""
 });
-app.UseRouting(); 
-
-app.MapControllers();
 app.MapFallbackToFile("index.html");
 #endif
 
+app.MapControllers();
 app.Run();

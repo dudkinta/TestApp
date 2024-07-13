@@ -26,8 +26,10 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<LocationContext>();
     context.Database.EnsureCreated();
+    DataInitializer.Initialize(context);
 }
 #endif
 
+app.MapControllers();
 app.Run();
 

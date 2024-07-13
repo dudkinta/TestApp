@@ -4,9 +4,7 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "index.html",
-      "applicationUrl": "http://localhost:5000",
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

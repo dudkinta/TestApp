@@ -1,6 +1,7 @@
 ﻿using LocationContextDb.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,21 +12,28 @@ namespace LocationContextDb
     {
         public static void Initialize(LocationContext context)
         {
-            // Проверка наличия данных
             if (context.Countries.Any())
             {
-                return;   // Данные уже инициализированы
+                return;
             }
 
-            var coutries = new CountryModel[]
-            {
-                new CountryModel { Name = "USA" },
-                new CountryModel { Name = "Canada" },
-            };
+            var usa = new CountryModel { Name = "USA" };
+            var canada = new CountryModel { Name = "Canada" };
+            context.Countries.Add(usa);
+            context.Countries.Add(canada);
 
-            foreach (var country in coutries)
+            var provinces = new ProvinceModel[]
             {
-                context.Countries.Add(country);
+                new() { Country=usa, Name="California"},
+                new() { Country=usa, Name="Texas"},
+                new() { Country=usa, Name="Florida"},
+                new() { Country=canada, Name="Ontario"},
+                new() { Country=canada, Name="Quebec"},
+                new() { Country=canada, Name="Alberta"},
+            };
+            foreach(var province in provinces)
+            {
+                context.Provinces.Add(province);
             }
             context.SaveChanges();
         }

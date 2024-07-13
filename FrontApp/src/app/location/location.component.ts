@@ -30,13 +30,13 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<Country[]>('/api/countries').subscribe((data: Country[]) => {
+    this.http.get<Country[]>('/api/country').subscribe((data: Country[]) => {
       this.countries = data;
     });
   }
 
   onCountryChange(countryId: string) {
-    this.http.get<Province[]>(`/api/countries/${countryId}/provinces`).subscribe((data: Province[]) => {
+    this.http.get<Province[]>(`/api/province/${countryId}`).subscribe((data: Province[]) => {
       this.provinces = data;
     });
   }

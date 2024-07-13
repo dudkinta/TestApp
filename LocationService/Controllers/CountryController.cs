@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LocationService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CountryController : ControllerBase
     {
         private readonly ILogger<CountryController> _logger;
@@ -21,13 +21,15 @@ namespace LocationService.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            _logger.LogInformation($"enter to method GetCountries");
             try
             {
-                var countries = _context.Countries.ToListAsync();
+                var countries = await _context.Countries.ToListAsync();
                 return Ok(countries);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
