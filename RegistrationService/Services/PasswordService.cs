@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Text.RegularExpressions;
 
 namespace RegistrationService.Services
 {
@@ -20,6 +21,14 @@ namespace RegistrationService.Services
         {
             var verificationResult = _passwordHasher.VerifyHashedPassword(user, hashPassword, password);
             return verificationResult == PasswordVerificationResult.Success;
+        }
+
+        public bool IsPasswordValid(string password)
+        {
+            var hasLetter = new Regex(@"[a-zA-Z]+");
+            var hasDigit = new Regex(@"\d+");
+
+            return hasLetter.IsMatch(password) && hasDigit.IsMatch(password);
         }
     }
 }

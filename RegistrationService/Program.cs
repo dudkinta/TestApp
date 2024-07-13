@@ -17,6 +17,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IEmailValidator, EmailValidator>();
 
 // Add context
 builder.Services.AddDbContext<IUserContext, UserContext>(options =>

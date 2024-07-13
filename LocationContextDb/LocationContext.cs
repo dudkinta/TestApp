@@ -11,9 +11,9 @@ namespace LocationContextDb
         {
         }
 
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return base.SaveChangesAsync();
+            return await base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
