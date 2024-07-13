@@ -3,8 +3,11 @@
  */
 using CommonLibrary;
 using LocationContextDb;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
+
+var privateServiceKey = builder.Configuration.GetSection("AppSettings:PrivateServiceKey").Value ?? string.Empty;
 
 // Add context
 builder.Services.AddDbContext<ILocationContext, LocationContext>(options =>
@@ -31,6 +36,28 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod());
 });
 #endif
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer("Service", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(privateServiceKey))
+    };
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ServicePolicy", policy => policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "service"));
+});
+
 var app = builder.Build();
 
 #if (DEBUG) // Check DB. Do not use in prod

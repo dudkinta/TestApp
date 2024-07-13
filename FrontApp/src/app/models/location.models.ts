@@ -1,9 +1,9 @@
 export interface Country {
-  id: string;
+  id: number;
   name: string;
 }
   
 export interface Province {
-  id: string;
+  id: number;
   name: string;
 }

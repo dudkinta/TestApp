@@ -1,8 +1,8 @@
 /*
  * This service need to save new users
  */
+using ApiHelper;
 using CommonLibrary;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using RegistrationService.Services;
@@ -10,6 +10,7 @@ using Serilog;
 using UserContextDb;
 
 var builder = WebApplication.CreateBuilder(args);
+var innerTokenEndpoint = builder.Configuration.GetSection("AppSettings:InnerTokenEndpoint").Value ?? string.Empty;
 
 // Setting Serilog for save logs to file/ In prod need change appsettings.json for sending logs to Elastic
 Log.Logger = new LoggerConfiguration()
@@ -18,6 +19,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IEmailValidator, EmailValidator>();
+builder.Services.AddScoped<IInnerApiClient, InnerApiClient>(_ => { return new InnerApiClient(innerTokenEndpoint); });
 
 // Add context
 builder.Services.AddDbContext<IUserContext, UserContext>(options =>
@@ -42,7 +44,7 @@ var app = builder.Build();
 
 
 #if (DEBUG) // Check DB. Do not use in prod
-using (var scope = app.Services.CreateScope())  
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<UserContext>();
@@ -51,7 +53,7 @@ using (var scope = app.Services.CreateScope())
 #endif
 
 #if (DEBUG) //Only for test Front App. Do not use in prod 
-app.UseStaticFiles(new StaticFileOptions            
+app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),

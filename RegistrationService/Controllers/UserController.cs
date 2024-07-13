@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiHelper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RegistrationService.Models;
 using RegistrationService.Services;
 using UserContextDb;
@@ -13,16 +15,21 @@ namespace RegistrationService.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserContext _context;
+        private readonly IConfiguration _configuration;
         private readonly IPasswordService _passwordService;
         private readonly IEmailValidator _emailValidator;
+        private readonly IInnerApiClient _innerApiClient;
 
-        public UserController(ILogger<UserController> logger, IUserContext context, IPasswordService passwordService, IEmailValidator emailValidator)
+        public UserController(ILogger<UserController> logger, IUserContext context, IConfiguration configuration,
+            IPasswordService passwordService, IEmailValidator emailValidator, IInnerApiClient innerApiClient)
         {
             _logger = logger;
             _context = context;
+            _configuration = configuration;
             _passwordService = passwordService;
             _emailValidator = emailValidator;
-            _logger.LogInformation($".ctor {nameof(UserController)}");
+            _innerApiClient = innerApiClient;
+            _logger.LogDebug($".ctor {nameof(UserController)}");
         }
 
         [HttpPost]
@@ -32,9 +39,14 @@ namespace RegistrationService.Controllers
             if (string.IsNullOrEmpty(regUser.Email) ||
                 !_emailValidator.IsEmailValid(regUser.Email) ||
                 string.IsNullOrEmpty(regUser.Password) || 
-                !_passwordService.IsPasswordValid(regUser.Password) ||
-                regUser.CountryId == 0 || regUser.ProvincesId == 0)
+                !_passwordService.IsPasswordValid(regUser.Password))
                 return BadRequest("user fields is incorrect");
+
+            var checkEndpoint = _configuration.GetSection("AppSettings:CheckProvincesEndpoint").Value ?? string.Empty;
+            var url = $"{checkEndpoint}{regUser.CountryId}/{regUser.ProvinceId}";
+            var checkResp = await _innerApiClient.GetAsync<bool>(url);
+            if (!checkResp.IsSuccessStatusCode)
+                return BadRequest("Check province failure");
 
             try
             {
@@ -44,7 +56,7 @@ namespace RegistrationService.Controllers
                     {
                         Country = regUser.CountryId,
                         Email = regUser.Email,
-                        Provinces = regUser.ProvincesId,
+                        Provinces = regUser.ProvinceId,
                         HashPassword = _passwordService.HashPassword(regUser.Email, regUser.Password)
                     };
                     _context.Users.Add(user);
@@ -55,7 +67,7 @@ namespace RegistrationService.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
 

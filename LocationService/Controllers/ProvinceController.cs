@@ -16,7 +16,7 @@ namespace LocationService.Controllers
         {
             _logger = logger;
             _context = context;
-            _logger.LogInformation($".ctor {nameof(ProvinceController)}");
+            _logger.LogDebug($".ctor {nameof(ProvinceController)}");
         }
 
         [HttpGet("{countryId}")]
@@ -30,7 +30,7 @@ namespace LocationService.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
         }

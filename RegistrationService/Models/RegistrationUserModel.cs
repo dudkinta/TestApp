@@ -5,6 +5,6 @@
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public int CountryId { get; set; }
-        public int ProvincesId { get; set; }
+        public int ProvinceId { get; set; }
     }
 }
