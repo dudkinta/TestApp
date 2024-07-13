@@ -1,8 +1,11 @@
 /*
  * This service need to save new users
  */
+using CommonLibrary;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using RegistrationService.Services;
 using Serilog;
 using UserContextDb;
 
@@ -13,11 +16,26 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+
 // Add context
 builder.Services.AddDbContext<IUserContext, UserContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<BadRequestFilter>();
+});
+
+#if (DEBUG)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+#endif
 
 var app = builder.Build();
 
@@ -42,4 +60,9 @@ app.MapFallbackToFile("index.html");
 #endif
 
 app.MapControllers();
+
+#if (DEBUG)
+app.UseCors("AllowSpecificOrigin");
+#endif
+
 app.Run();

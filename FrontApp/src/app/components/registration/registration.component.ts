@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from '../../models/user.models';
 
 @Component({
   selector: 'app-registration',
@@ -40,7 +41,14 @@ export class RegistrationComponent {
 
   onSubmit() {
     if (this.registrationForm.valid) {
-      this.router.navigate(['/location']);
+      const user: User = {
+        email: this.registrationForm.value.email,
+        password: this.registrationForm.value.password,
+        countryId: 0,  
+        provinceId: 0 
+      };
+
+      this.router.navigate(['/location'], { state: { user } });
     }
   }
 }

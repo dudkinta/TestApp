@@ -12,7 +12,7 @@ namespace UserContextDb
 
         public Task<int> SaveChangesAsync()
         {
-            return SaveChangesAsync();
+            return base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

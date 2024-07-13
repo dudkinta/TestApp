@@ -4,10 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AppComponent } from './app.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { LocationComponent } from './location/location.component';
-import { routes } from './app.routes';
+import { AppComponent } from '../components/app/app.component';
+import { RegistrationComponent } from '../components/registration/registration.component';
+import { LocationComponent } from '../components/location/location.component';
+import { routes } from '../app.routes';
 
 @NgModule({
   declarations: [

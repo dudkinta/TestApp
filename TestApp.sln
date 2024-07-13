@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocationService", "Location
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationContextDb", "LocationContextDb\LocationContextDb.csproj", "{F15D3375-CB85-4C62-BB56-10A29FFA86D2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{01999191-5E90-4B99-A5C1-5B3735DC2132}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{0EC338C8-2732-480C-9BFE-9A29BECABA0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F15D3375-CB85-4C62-BB56-10A29FFA86D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC338C8-2732-480C-9BFE-9A29BECABA0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC338C8-2732-480C-9BFE-9A29BECABA0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC338C8-2732-480C-9BFE-9A29BECABA0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC338C8-2732-480C-9BFE-9A29BECABA0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +54,7 @@ Global
 		{140A8CB3-AA9A-45BD-BE98-47AFBC1D201E} = {7F244BE0-2F6A-4819-8C82-384F9EB5CBAF}
 		{58F51D36-CB9A-4FDF-ACE8-40F4D1E361C2} = {4DBDE7A5-9A2C-4B72-92D2-86DADD562C63}
 		{F15D3375-CB85-4C62-BB56-10A29FFA86D2} = {4DBDE7A5-9A2C-4B72-92D2-86DADD562C63}
+		{0EC338C8-2732-480C-9BFE-9A29BECABA0F} = {01999191-5E90-4B99-A5C1-5B3735DC2132}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B51CE905-9770-4360-99E1-535E18F91069}

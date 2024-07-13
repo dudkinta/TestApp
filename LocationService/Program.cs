@@ -1,6 +1,7 @@
 /*
  * This service need to get countries and provinces
  */
+using CommonLibrary;
 using LocationContextDb;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -16,8 +17,20 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddDbContext<ILocationContext, LocationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<BadRequestFilter>();
+});
 
+#if (DEBUG)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:5000", "http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+#endif
 var app = builder.Build();
 
 #if (DEBUG) // Check DB. Do not use in prod
@@ -31,5 +44,10 @@ using (var scope = app.Services.CreateScope())
 #endif
 
 app.MapControllers();
+
+#if (DEBUG)
+app.UseCors("AllowSpecificOrigin");
+#endif
+
 app.Run();
 
