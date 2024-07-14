@@ -54,6 +54,30 @@ namespace LocationContextDb.Migrations
                 schema: "loc",
                 table: "provinces",
                 column: "CountryId");
+
+
+            migrationBuilder.InsertData(
+                schema: "loc",
+                table: "countries",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "USA" },
+                    { 2, "Canada" }
+                });
+            migrationBuilder.InsertData(
+                schema: "loc",
+                table: "provinces",
+                columns: new[] { "Id", "Name", "CountryId" },
+                values: new object[,]
+                {
+                    { 1, "California", 1 },
+                    { 2, "Texas", 1 },
+                    { 3, "Florida", 1 },
+                    { 4, "Ontario", 2 },
+                    { 5, "Quebec", 2 },
+                    { 6, "Alberta", 2 }
+                });
         }
 
         /// <inheritdoc />
