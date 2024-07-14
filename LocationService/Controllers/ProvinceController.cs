@@ -1,7 +1,6 @@
 ﻿using LocationContextDb;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace LocationService.Controllers
 {
@@ -25,7 +24,7 @@ namespace LocationService.Controllers
             _logger.LogInformation($"Get provinces with country id {countryId}");
             try
             {
-                var provinces = await _context.Provinces.Where(_=>_.CountryId == countryId).ToListAsync();
+                var provinces = await _context.Provinces.Where(_ => _.CountryId == countryId).ToListAsync();
                 return Ok(provinces);
             }
             catch (Exception ex)
