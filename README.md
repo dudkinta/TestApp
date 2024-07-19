@@ -12,9 +12,9 @@ Open in VisualStudio and press F5. The solution is configured to run several pro
 * Consul
 * nginx
   config nginx:
-    server {
-            listen       8080;
-            server_name  localhost;
+        server {
+                listen       8080;
+                server_name  localhost;
     
     		location /consul/ {
     			proxy_pass http://localhost:8500/;
