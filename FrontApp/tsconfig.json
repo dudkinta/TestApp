@@ -23,9 +23,6 @@
       "dom"
     ],
     "baseUrl": "./",
-    "paths": {
-      "@environments/*": ["src/environments/*"]
-    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

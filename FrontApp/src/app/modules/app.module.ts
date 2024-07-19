@@ -8,6 +8,7 @@ import { AppComponent } from '../components/app/app.component';
 import { RegistrationComponent } from '../components/registration/registration.component';
 import { LocationComponent } from '../components/location/location.component';
 import { routes } from '../app.routes';
+import { ConsulService } from '../services/consul.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { routes } from '../app.routes';
     HttpClientModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [ConsulService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
