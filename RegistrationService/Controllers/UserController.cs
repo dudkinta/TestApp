@@ -1,7 +1,6 @@
 ﻿using ApiHelper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using RegistrationService.Models;
 using RegistrationService.Services;
 using UserContextDb;
@@ -33,24 +32,24 @@ namespace RegistrationService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(RegistrationUserModel regUser)
+        public async Task<IActionResult> Post(RegistrationUserModel regUser, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"attemp save user to db");
+            _logger.LogInformation($"Attemp save user to db");
             if (string.IsNullOrEmpty(regUser.Email) ||
                 !_emailValidator.IsEmailValid(regUser.Email) ||
-                string.IsNullOrEmpty(regUser.Password) || 
+                string.IsNullOrEmpty(regUser.Password) ||
                 !_passwordService.IsPasswordValid(regUser.Password))
-                return BadRequest("user fields is incorrect");
+                return BadRequest("User fields is incorrect");
 
             var checkEndpoint = _configuration.GetSection("AppSettings:CheckProvincesEndpoint").Value ?? string.Empty;
             var url = $"{checkEndpoint}{regUser.CountryId}/{regUser.ProvinceId}";
-            var checkResp = await _innerApiClient.GetAsync<bool>(url);
+            var checkResp = await _innerApiClient.GetAsync<bool>(url, cancellationToken);
             if (!checkResp.IsSuccessStatusCode)
                 return BadRequest("Check province failure");
 
             try
             {
-                if (await _context.Users.FirstOrDefaultAsync(_=>_.Email == regUser.Email)==null)
+                if (await _context.Users.FirstOrDefaultAsync(_ => _.Email == regUser.Email, cancellationToken) == null)
                 {
                     var user = new UserModel()
                     {
@@ -60,7 +59,7 @@ namespace RegistrationService.Controllers
                         HashPassword = _passwordService.HashPassword(regUser.Email, regUser.Password)
                     };
                     _context.Users.Add(user);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveAsync(cancellationToken);
                     return Ok();
                 }
                 return BadRequest("User alredy exist");
@@ -70,8 +69,6 @@ namespace RegistrationService.Controllers
                 _logger.LogError(ex, ex.Message);
                 return BadRequest(ex.Message);
             }
-
-
         }
     }
 }

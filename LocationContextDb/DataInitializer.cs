@@ -1,10 +1,4 @@
 ﻿using LocationContextDb.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LocationContextDb
 {
@@ -31,7 +25,7 @@ namespace LocationContextDb
                 new() { Country=canada, Name="Quebec"},
                 new() { Country=canada, Name="Alberta"},
             };
-            foreach(var province in provinces)
+            foreach (var province in provinces)
             {
                 context.Provinces.Add(province);
             }

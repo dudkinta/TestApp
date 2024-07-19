@@ -8,7 +8,7 @@ namespace LocationService.Controllers
     [Authorize(AuthenticationSchemes = "Service", Policy = "ServicePolicy")]
     [ApiController]
     [Route("api/[controller]")]
-    public class CheckController: ControllerBase
+    public class CheckController : ControllerBase
     {
         private readonly ILogger<CheckController> _logger;
         private readonly ILocationContext _context;
@@ -20,11 +20,11 @@ namespace LocationService.Controllers
         }
 
         [HttpGet("{countryId}/{provinceId}")]
-        public async Task<IActionResult> Check(int countryId, int provinceId)
+        public async Task<IActionResult> Check(int countryId, int provinceId, CancellationToken cancellationToken)
         {
             try
             {
-                if (await _context.Provinces.FirstOrDefaultAsync(_=>_.CountryId==countryId && _.Id == provinceId)!=null)
+                if (await _context.Provinces.FirstOrDefaultAsync(_ => _.CountryId == countryId && _.Id == provinceId, cancellationToken) != null)
                     return Ok();
 
                 return BadRequest("Province not found");
@@ -34,7 +34,7 @@ namespace LocationService.Controllers
                 _logger.LogError(ex, ex.Message);
                 return BadRequest("Error in check province");
             }
-            
+
         }
     }
 }

@@ -11,9 +11,9 @@ namespace LocationContextDb
         {
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task<int> SaveAsync(CancellationToken cancellationToken)
         {
-            return await base.SaveChangesAsync();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

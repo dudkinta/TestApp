@@ -19,12 +19,12 @@ namespace LocationService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             _logger.LogInformation($"enter to method GetCountries");
             try
             {
-                var countries = await _context.Countries.ToListAsync();
+                var countries = await _context.Countries.ToListAsync(cancellationToken);
                 return Ok(countries);
             }
             catch (Exception ex)

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace RegistrationService.Services
 {
-    public class PasswordService: IPasswordService
+    public class PasswordService : IPasswordService
     {
         private readonly PasswordHasher<string> _passwordHasher;
 

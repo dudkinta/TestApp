@@ -18,59 +18,59 @@ namespace ApiHelper
             _client = new HttpClient(authenticatedHandler);
         }
 
-        public async Task<BaseResponse<T>> GetAsync<T>(string url)
+        public async Task<BaseResponse<T>> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        public async Task<BaseResponse<T>> PostAsync<T>(string url)
+        public async Task<BaseResponse<T>> PostAsync<T>(string url, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url);
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        public async Task<BaseResponse<T>> PostAsync<T>(string url, HttpContent? content)
+        public async Task<BaseResponse<T>> PostAsync<T>(string url, HttpContent? content, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = content;
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        public async Task<BaseResponse<T>> PutAsync<T>(string url)
+        public async Task<BaseResponse<T>> PutAsync<T>(string url, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Put, url);
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        public async Task<BaseResponse<T>> PutAsync<T>(string url, HttpContent? content)
+        public async Task<BaseResponse<T>> PutAsync<T>(string url, HttpContent? content, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Put, url);
             request.Content = content;
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        public async Task<BaseResponse<T>> DeleteAsync<T>(string url)
+        public async Task<BaseResponse<T>> DeleteAsync<T>(string url, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await _client.SendAsync(request);
-            var res = await GetResult<T>(response);
+            var response = await _client.SendAsync(request, cancellationToken);
+            var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
-        private static async Task<BaseResponse<T>> GetResult<T>(HttpResponseMessage response)
+        private static async Task<BaseResponse<T>> GetResult<T>(HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            string responseStr = await response.Content.ReadAsStringAsync();
+            string responseStr = await response.Content.ReadAsStringAsync(cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 if (!string.IsNullOrEmpty(responseStr))

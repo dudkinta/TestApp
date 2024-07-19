@@ -2,7 +2,7 @@
 
 namespace RegistrationService.Services
 {
-    public class EmailValidator: IEmailValidator
+    public class EmailValidator : IEmailValidator
     {
         public bool IsEmailValid(string email)
         {

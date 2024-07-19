@@ -19,12 +19,12 @@ namespace LocationService.Controllers
         }
 
         [HttpGet("{countryId}")]
-        public async Task<IActionResult> Get(int countryId)
+        public async Task<IActionResult> Get(int countryId, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Get provinces with country id {countryId}");
             try
             {
-                var provinces = await _context.Provinces.Where(_ => _.CountryId == countryId).ToListAsync();
+                var provinces = await _context.Provinces.Where(_ => _.CountryId == countryId).ToListAsync(cancellationToken);
                 return Ok(provinces);
             }
             catch (Exception ex)
