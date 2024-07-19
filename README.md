@@ -10,8 +10,7 @@ Open in VisualStudio and press F5. The solution is configured to run several pro
 
 ## Dependencies
 * Consul
-* nginx
-  config nginx:
+* nginx config:
   
         server {
                 listen       8080;
