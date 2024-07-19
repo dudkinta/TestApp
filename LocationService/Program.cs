@@ -106,7 +106,6 @@ void CheckDb(WebApplication? app)
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<LocationContext>();
         context.Database.EnsureCreated();
-        DataInitializer.Initialize(context);
     }
 #endif
 }

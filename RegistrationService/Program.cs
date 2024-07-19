@@ -3,9 +3,11 @@
  */
 using ApiHelper;
 using CommonLibrary;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using RegistrationService.Services;
+using RegistrationService.Validators;
 using Serilog;
 using UserContextDb;
 
@@ -57,6 +59,9 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
     // Add context
     services.AddDbContext<IUserContext, UserContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+    //Add validators
+    builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 }
 
 void AddCors(IServiceCollection services)

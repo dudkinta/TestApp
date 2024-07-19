@@ -37,6 +37,20 @@ namespace LocationContextDb
                 .HasOne(p => p.Country)
                 .WithMany(c => c.Provinces)
                 .HasForeignKey(p => p.CountryId);
+
+            var usa = new CountryModel { Id = 1, Name = "USA" };
+            var canada = new CountryModel { Id = 2, Name = "Canada" };
+
+            modelBuilder.Entity<CountryModel>().HasData(usa, canada);
+
+            modelBuilder.Entity<ProvinceModel>().HasData(
+                new ProvinceModel { Id = 1, CountryId = 1, Name = "California" },
+                new ProvinceModel { Id = 2, CountryId = 1, Name = "Texas" },
+                new ProvinceModel { Id = 3, CountryId = 1, Name = "Florida" },
+                new ProvinceModel { Id = 4, CountryId = 2, Name = "Ontario" },
+                new ProvinceModel { Id = 5, CountryId = 2, Name = "Quebec" },
+                new ProvinceModel { Id = 6, CountryId = 2, Name = "Alberta" }
+            );
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ApiHelper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RegistrationService.Models;
@@ -18,9 +19,11 @@ namespace RegistrationService.Controllers
         private readonly IPasswordService _passwordService;
         private readonly IEmailValidator _emailValidator;
         private readonly IInnerApiClient _innerApiClient;
+        private readonly IValidator<RegistrationUserModel> _userValidator;
 
         public UserController(ILogger<UserController> logger, IUserContext context, IConfiguration configuration,
-            IPasswordService passwordService, IEmailValidator emailValidator, IInnerApiClient innerApiClient)
+            IPasswordService passwordService, IEmailValidator emailValidator, IInnerApiClient innerApiClient,
+            IValidator<RegistrationUserModel> userValidator)
         {
             _logger = logger;
             _context = context;
@@ -28,6 +31,7 @@ namespace RegistrationService.Controllers
             _passwordService = passwordService;
             _emailValidator = emailValidator;
             _innerApiClient = innerApiClient;
+            _userValidator = userValidator;
             _logger.LogDebug($".ctor {nameof(UserController)}");
         }
 
@@ -35,11 +39,11 @@ namespace RegistrationService.Controllers
         public async Task<IActionResult> Post(RegistrationUserModel regUser, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Attemp save user to db");
-            if (string.IsNullOrEmpty(regUser.Email) ||
-                !_emailValidator.IsEmailValid(regUser.Email) ||
-                string.IsNullOrEmpty(regUser.Password) ||
-                !_passwordService.IsPasswordValid(regUser.Password))
-                return BadRequest("User fields is incorrect");
+            var validationResult = await _userValidator.ValidateAsync(regUser, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
 
             var checkEndpoint = _configuration.GetSection("AppSettings:CheckProvincesEndpoint").Value ?? string.Empty;
             var url = $"{checkEndpoint}{regUser.CountryId}/{regUser.ProvinceId}";
