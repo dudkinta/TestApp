@@ -2,7 +2,9 @@
  * This service need to get countries and provinces
  */
 using CommonLibrary;
+using Consul;
 using LocationContextDb;
+using LocationService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -48,6 +50,14 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
     // Add context
     builder.Services.AddDbContext<ILocationContext, LocationContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+    //Consul client
+    var consulEndpoint = configuration.GetSection("AppSettings:ConsulEndpoint").Value ?? string.Empty;
+    services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(cfg =>
+    {
+        cfg.Address = new Uri(consulEndpoint);
+    }));
+    services.AddHostedService<ConsulHostedService>();
 }
 
 void AddJWTAuthorize(IServiceCollection services, IConfiguration configuration)

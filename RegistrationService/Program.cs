@@ -3,6 +3,7 @@
  */
 using ApiHelper;
 using CommonLibrary;
+using Consul;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -52,16 +53,26 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
     services.AddScoped<IPasswordService, PasswordService>();
     services.AddScoped<IEmailValidator, EmailValidator>();
 
-    //add innerApiClient
-    var innerTokenEndpoint = configuration.GetSection("AppSettings:InnerTokenEndpoint").Value ?? string.Empty;
-    services.AddScoped<IInnerApiClient, InnerApiClient>(_ => { return new InnerApiClient(innerTokenEndpoint); });
-
     // Add context
     services.AddDbContext<IUserContext, UserContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
     //Add validators
     builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
+
+    //Consul client
+    var consulEndpoint = configuration.GetSection("AppSettings:ConsulEndpoint").Value ?? string.Empty;
+    services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(cfg =>
+    {
+        cfg.Address = new Uri(consulEndpoint);
+    }));
+    services.AddHostedService<ConsulHostedService>();
+
+    //Consul resolver
+    services.AddTransient<ConsulServiceDiscovery>();
+
+    //Add InnerApiClient
+    services.AddScoped<IInnerApiClient, InnerApiClient>();
 }
 
 void AddCors(IServiceCollection services)

@@ -1,6 +1,8 @@
 using CommonLibrary;
+using Consul;
 using InnerTokenService.Helpers;
 using InnerTokenService.Interfaces;
+using InnerTokenService.Services;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -41,6 +43,14 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
 
     var privateServiceKey = configuration.GetSection("AppSettings:PrivateServiceKey").Value ?? string.Empty;
     services.AddScoped<ITokenHelper, JwtTokenHelper>((a) => new JwtTokenHelper(privateServiceKey));
+
+    //Consul client
+    var consulEndpoint = configuration.GetSection("AppSettings:ConsulEndpoint").Value ?? string.Empty;
+    services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(cfg =>
+    {
+        cfg.Address = new Uri(consulEndpoint);
+    }));
+    services.AddHostedService<ConsulHostedService>();
 }
 
 void AddSwagger(IServiceCollection services)

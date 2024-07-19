@@ -5,65 +5,77 @@ namespace ApiHelper
 {
     public class InnerApiClient : IInnerApiClient
     {
-        private HttpClient _client;
-        public InnerApiClient(string tokenEndpoint)
+        private readonly ConsulServiceDiscovery _consulServiceDiscovery;
+        public InnerApiClient(ConsulServiceDiscovery consulServiceDiscovery)
+        {
+            _consulServiceDiscovery = consulServiceDiscovery;
+        }
+
+        private async Task<HttpClient> GetHttpClient()
         {
             var httpClient = new HttpClient();
-            var tokenProvider = new TokenProvider(httpClient, tokenEndpoint);
+            var tokenEndpoint = await _consulServiceDiscovery.GetServiceAddress("InnerTokenService");
+            var tokenProvider = new TokenProvider(httpClient, $"http://{tokenEndpoint}/api/token/");
             var authenticatedHandler = new AuthenticatedHttpClientHandler(tokenProvider)
             {
                 InnerHandler = new HttpClientHandler()
             };
 
-            _client = new HttpClient(authenticatedHandler);
+            return new HttpClient(authenticatedHandler);
         }
 
         public async Task<BaseResponse<T>> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
         public async Task<BaseResponse<T>> PostAsync<T>(string url, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, url);
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
         public async Task<BaseResponse<T>> PostAsync<T>(string url, HttpContent? content, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = content;
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
         public async Task<BaseResponse<T>> PutAsync<T>(string url, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Put, url);
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
         public async Task<BaseResponse<T>> PutAsync<T>(string url, HttpContent? content, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Put, url);
             request.Content = content;
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }
 
         public async Task<BaseResponse<T>> DeleteAsync<T>(string url, CancellationToken cancellationToken)
         {
+            var client = await GetHttpClient();
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await _client.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var res = await GetResult<T>(response, cancellationToken);
             return res;
         }

@@ -1,4 +1,5 @@
 ﻿using ApiHelper;
+using CommonLibrary;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,21 +18,21 @@ namespace RegistrationService.Controllers
         private readonly IUserContext _context;
         private readonly IConfiguration _configuration;
         private readonly IPasswordService _passwordService;
-        private readonly IEmailValidator _emailValidator;
         private readonly IInnerApiClient _innerApiClient;
         private readonly IValidator<RegistrationUserModel> _userValidator;
+        private readonly ConsulServiceDiscovery _serviceDiscovery;
 
         public UserController(ILogger<UserController> logger, IUserContext context, IConfiguration configuration,
-            IPasswordService passwordService, IEmailValidator emailValidator, IInnerApiClient innerApiClient,
-            IValidator<RegistrationUserModel> userValidator)
+            IPasswordService passwordService, IInnerApiClient innerApiClient,
+            IValidator<RegistrationUserModel> userValidator, ConsulServiceDiscovery consulServiceDiscovery)
         {
             _logger = logger;
             _context = context;
             _configuration = configuration;
             _passwordService = passwordService;
-            _emailValidator = emailValidator;
             _innerApiClient = innerApiClient;
             _userValidator = userValidator;
+            _serviceDiscovery = consulServiceDiscovery;
             _logger.LogDebug($".ctor {nameof(UserController)}");
         }
 
@@ -41,12 +42,13 @@ namespace RegistrationService.Controllers
             _logger.LogInformation($"Attemp save user to db");
             var validationResult = await _userValidator.ValidateAsync(regUser, cancellationToken);
             if (!validationResult.IsValid)
-            {
                 return BadRequest(validationResult.Errors);
-            }
 
-            var checkEndpoint = _configuration.GetSection("AppSettings:CheckProvincesEndpoint").Value ?? string.Empty;
-            var url = $"{checkEndpoint}{regUser.CountryId}/{regUser.ProvinceId}";
+            var checkEndpoint = await _serviceDiscovery.GetServiceAddress("LocationService");
+            if (string.IsNullOrEmpty(checkEndpoint))
+                return NotFound("Service Location not found");
+
+            var url = $"http://{checkEndpoint}/api/check/{regUser.CountryId}/{regUser.ProvinceId}";
             var checkResp = await _innerApiClient.GetAsync<bool>(url, cancellationToken);
             if (!checkResp.IsSuccessStatusCode)
                 return BadRequest("Check province failure");
