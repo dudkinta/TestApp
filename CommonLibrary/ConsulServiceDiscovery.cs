@@ -11,7 +11,7 @@ namespace CommonLibrary
             _consulClient = consulClient;
         }
 
-        public async Task<string> GetServiceAddress(string serviceName)
+        public async Task<string?> GetServiceAddress(string serviceName)
         {
             var services = await _consulClient.Agent.Services();
             var service = services.Response.Values.FirstOrDefault(s => s.Service.Equals(serviceName, StringComparison.OrdinalIgnoreCase));

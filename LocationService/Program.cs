@@ -4,7 +4,6 @@
 using CommonLibrary;
 using Consul;
 using LocationContextDb;
-using LocationService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -50,6 +49,16 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
     // Add context
     builder.Services.AddDbContext<ILocationContext, LocationContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+    var consulServiceConfig = new ConsulServiceConfiguration
+    {
+        Name = "LocationService",
+        Address = "localhost",
+        Port = 5001,
+        HealthEndpoint = "api/health/"
+    };
+
+    services.AddSingleton(consulServiceConfig);
 
     //Consul client
     var consulEndpoint = configuration.GetSection("AppSettings:ConsulEndpoint").Value ?? string.Empty;

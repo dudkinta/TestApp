@@ -60,6 +60,16 @@ void AddServices(IServiceCollection services, IConfiguration configuration)
     //Add validators
     builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 
+    var consulServiceConfig = new ConsulServiceConfiguration
+    {
+        Name = "RegistrationService",
+        Address = "localhost",
+        Port = 5000,
+        HealthEndpoint = "api/health/"
+    };
+
+    services.AddSingleton(consulServiceConfig);
+
     //Consul client
     var consulEndpoint = configuration.GetSection("AppSettings:ConsulEndpoint").Value ?? string.Empty;
     services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(cfg =>
